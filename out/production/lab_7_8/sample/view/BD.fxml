@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="903.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.BDController">
+  <children>
+    <Label fx:id="lbllogin" alignment="BASELINE_LEFT" disable="false" graphicTextGap="10.0" layoutX="768.0" layoutY="519.0" maxHeight="1.7976931348623157E308" prefHeight="28.0" prefWidth="129.0" textAlignment="RIGHT" textOverrun="WORD_ELLIPSIS" visible="true" wrapText="false">
+      <font>
+        <Font name="System Italic" size="18.0" />
+      </font>
+    </Label>
+    <SplitMenuButton id="smbtablebase" fx:id="smbTableBase" ellipsisString="..." layoutX="14.0" layoutY="520.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="123.0" text="Таблицы" />
+    <Button fx:id="addTable" layoutX="146.0" layoutY="520.0" mnemonicParsing="false" onAction="#onActionAdd" prefHeight="28.0" text="Добавить" />
+    <Button id="addTable" fx:id="deleteTable" layoutX="238.0" layoutY="519.0" mnemonicParsing="false" onAction="#onActionDelete" prefHeight="29.0" text="Удалить" />
+      <Button fx:id="outBottom" layoutX="699.0" layoutY="519.0" mnemonicParsing="false" onAction="#outBottomAction" prefHeight="29.0" prefWidth="62.0" text="Отчет" visible="false" />
+      <ScrollPane prefHeight="514.0" prefWidth="903.0">
+         <content>
+          <TableView fx:id="tableView" editable="true" prefHeight="514.0" prefWidth="903.0" />
+         </content>
+      </ScrollPane>
+      <SplitMenuButton id="smbtablebase" fx:id="columTableView" ellipsisString="..." layoutX="322.0" layoutY="519.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="123.0" text="Колонка" />
+      <TextField fx:id="testSearch" layoutX="452.0" layoutY="521.0" prefHeight="25.0" prefWidth="242.0" promptText="искать..." />
+  </children>
+</AnchorPane>
