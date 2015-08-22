@@ -1,12 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'idea'
 
 version = '1.0'
 
-mainClassName = "a.stratonov.example.Main"
+mainClassName = "stratonov.example.Main"
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
