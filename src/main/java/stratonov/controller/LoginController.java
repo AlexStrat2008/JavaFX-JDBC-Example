@@ -1,4 +1,4 @@
-package main.java.stratonov.example.controller;
+package stratonov.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import main.java.stratonov.example.bdclient.JDBCClient;
+import stratonov.bdclient.JDBCClient;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -44,7 +44,7 @@ public class LoginController {
                 }
                 connection = jdbcClient.createConnect("jdbc:postgresql://127.0.0.1:5432/breadsql", login, password);
                 if(connection != null){
-                    Parent parent = FXMLLoader.load(getClass().getResource("/sample/view/BD.fxml"));
+                    Parent parent = FXMLLoader.load(getClass().getResource("stratonov/view/BD.fxml"));
                     Stage stage = new Stage();
                     Scene scene = new Scene(parent);
                     stage.setScene(scene);

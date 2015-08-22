@@ -1,4 +1,4 @@
-package main.java.stratonov.example.controller;
+package stratonov.controller;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

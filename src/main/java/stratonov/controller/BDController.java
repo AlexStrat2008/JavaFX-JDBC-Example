@@ -1,4 +1,4 @@
-package main.java.stratonov.example.controller;
+package stratonov.controller;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -166,7 +166,7 @@ public class BDController implements Initializable {
     public void onActionAdd(ActionEvent actionEvent) {
         Parent parent = null;
         try {
-            parent = FXMLLoader.load(getClass().getResource("/sample/view/DialogAdd.fxml"));
+            parent = FXMLLoader.load(getClass().getResource("stratonov/view/DialogAdd.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(parent);
             stage.setScene(scene);

@@ -3,7 +3,7 @@ apply plugin: 'application'
 
 version = '1.0'
 
-mainClassName = "stratonov.example.Main"
+mainClassName = "stratonov.Main"
 
 repositories {
     mavenLocal()
@@ -11,9 +11,15 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 }
 
 jar {
     manifest.attributes("Main-Class": mainClassName);
+    baseName = 'ExampleJDBC'
+    version =  '1.1.0'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.6'
 }

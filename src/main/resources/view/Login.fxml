@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="274.0" prefWidth="397.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="main.java.stratonov.example.controller.LoginController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="274.0" prefWidth="397.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="stratonov.controller.LoginController">
   <children>
     <TextField fx:id="txtUsername" layoutX="75.0" layoutY="82.0" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
     <PasswordField fx:id="txtPassword" layoutX="75.0" layoutY="126.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />

@@ -1,4 +1,4 @@
-package main.java.stratonov.example;
+package stratonov;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,13 +10,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/main/java/stratonov/example/view/Login.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource("/view/Login.fxml"));
+        Parent root = (Parent) loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Login");
         stage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);

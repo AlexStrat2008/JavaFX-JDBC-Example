@@ -1,4 +1,4 @@
-package main.java.stratonov.example.bdclient;
+package stratonov.bdclient;
 
 import java.sql.*;
 
