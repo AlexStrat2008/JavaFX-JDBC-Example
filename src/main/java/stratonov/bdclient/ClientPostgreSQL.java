@@ -7,18 +7,12 @@ import java.sql.SQLException;
 /**
  * Created by strat on 17.03.15.
  */
-public class ClientPostgreSQL implements JDBCClient {
-    private String url;
-    private String login;
-    private String password;
+public class ClientPostgreSQL extends JDBCClient {
     private static ClientPostgreSQL instance;
 
     private ClientPostgreSQL() throws ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
-        System.out.println("Драйвер подключен");
-        login = "postgres";
-        password = "postgres";
-        url = "jdbc:postgresql://127.0.0.1:5432/Example";
+        System.out.println("Драйвер postgresql подключен");
     }
 
     public static ClientPostgreSQL getInstance() throws ClassNotFoundException {
@@ -28,9 +22,9 @@ public class ClientPostgreSQL implements JDBCClient {
     @Override
     public boolean init(String url, String login, String password) throws SQLException {
         Connection connection = DriverManager.getConnection(url, login, password);
-        this.url = url;
-        this.login = login;
-        this.password = password;
+        super.url = url;
+        super.login = login;
+        super.password = password;
         return true;
     }
 }

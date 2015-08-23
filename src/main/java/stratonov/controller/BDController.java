@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import stratonov.bdclient.ClientPostgreSQL;
+import stratonov.bdclient.JDBCClient;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,15 +34,21 @@ public class BDController implements Initializable {
     public static MenuItem itemAction;
     private static ObservableList<ObservableList> data;
     public Button outBottom;
-    public Label lbllogin;
+    public Label lblLogin;
     public TextField testSearch;
     public SplitMenuButton columTableView;
     private ObservableList editDate;
     private TableColumn idTableColumn1;
+    private JDBCClient jdbcClient;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        lbllogin.setText(LoginController.login);
+        try {
+            jdbcClient = ClientPostgreSQL.getInstance();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        lblLogin.setText(jdbcClient.getLogin());
 //        try {
 ////            statement = LoginController.connection.createStatement();
 ////          select table_name from information_schema.tables WHERE table_schema = 'bread'

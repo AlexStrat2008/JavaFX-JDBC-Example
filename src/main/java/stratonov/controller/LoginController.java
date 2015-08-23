@@ -31,6 +31,9 @@ public class LoginController {
         String login = txtUsername.getText();
         String password = txtPassword.getText();
         try {
+            if (login.isEmpty() || password.isEmpty()) {
+                throw new Exception("Укажите логин или пароль!");
+            }
             JDBCClient jdbcClient = ClientPostgreSQL.getInstance();
             if (jdbcClient.init(urlDb, login, password)) {
                 Parent parent = FXMLLoader.load(getClass().getResource("/view/BD.fxml"));
@@ -50,6 +53,8 @@ public class LoginController {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
 }
