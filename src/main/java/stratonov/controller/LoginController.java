@@ -13,14 +13,15 @@ import stratonov.bdclient.ClientPostgreSQL;
 import stratonov.bdclient.JDBCClient;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Created by strat on 17.03.15.
  */
 public class LoginController {
+    private static final String dbDriver = "postgresql";
+    private static final String dbUrl = "127.0.0.1:5432";
+    private static final String dbName = "Example";
 
-    private static final String urlDb = "jdbc:postgresql://127.0.0.1:5432/Example";
     @FXML
     private TextField txtUsername;
     @FXML
@@ -35,7 +36,7 @@ public class LoginController {
                 throw new Exception("Укажите логин или пароль!");
             }
             JDBCClient jdbcClient = ClientPostgreSQL.getInstance();
-            if (jdbcClient.init(urlDb, login, password)) {
+            if (jdbcClient.init(dbDriver, dbUrl, dbName, login, password)) {
                 Parent parent = FXMLLoader.load(getClass().getResource("/view/BD.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle("Table Frame");
@@ -43,12 +44,13 @@ public class LoginController {
                 stage.show();
                 System.out.println("Авторизация успешна прошла!");
             }
+            else{
+                new Alert(Alert.AlertType.ERROR, "Подключение не произошло.\nПроверьте логин или пароль.").showAndWait();
+            }
         } catch (NullPointerException e) {
             new Alert(Alert.AlertType.ERROR, "Не найдена view BD.fxml").showAndWait();
             e.printStackTrace();
             System.exit(-1);
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.WARNING, "Подключение к бд, не произошло!\nПроерьте логин и пароль доступа.").showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
