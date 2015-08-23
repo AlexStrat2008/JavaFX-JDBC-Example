@@ -45,9 +45,9 @@ public class BDController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        lbllogin.setText(LoginController.login);
+//        lbllogin.setText(LoginController.login);
         try {
-            statement = LoginController.connection.createStatement();
+//            statement = LoginController.connection.createStatement();
 //          select table_name from information_schema.tables WHERE table_schema = 'bread'
             ResultSet result1 = statement.executeQuery("select table_name from information_schema.tables WHERE table_schema = 'bread'");
             while (result1.next()) {
@@ -59,9 +59,9 @@ public class BDController implements Initializable {
                         columTableView.getItems().clear();
                         itemAction = (MenuItem) event.getSource();
 //                            Select * From bread.tablel
-                        if (LoginController.login.equals("worker") && itemAction.getText().equals("order")) {
-                            outBottom.setVisible(true);
-                        }
+//                        if (LoginController.login.equals("worker") && itemAction.getText().equals("order")) {
+//                            outBottom.setVisible(true);
+//                        }
                         data = FXCollections.observableArrayList();
                         try {
                             ResultSet rs = statement.executeQuery("Select * From bread." + itemAction.getText());

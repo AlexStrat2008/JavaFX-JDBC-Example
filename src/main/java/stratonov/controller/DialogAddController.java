@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 
 /**
@@ -26,7 +25,7 @@ public class DialogAddController implements Initializable {
         ObservableList<javafx.scene.Node> list = anchorPaneDialogAdd.getChildren();
         try {
 //            INSERT INTO bread.client (lvl_trust, company) VALUES (2,'Cheese');
-            Statement statement = LoginController.connection.createStatement();
+//            Statement statement = LoginController.connection.createStatement();
             String sqlAdd = " INSERT INTO bread." + BDController.itemAction.getText() + " (";
             for (int i = 1; i < tableView.getColumns().size(); i++) {
                 if (i+1 == tableView.getColumns().size()) {
@@ -46,7 +45,7 @@ public class DialogAddController implements Initializable {
                     sqlAdd += "'" + ((TextField) list.get(i)).getText() + "',";
                 }
             }
-            statement.executeUpdate(sqlAdd);
+//            statement.executeUpdate(sqlAdd);
             BDController.updateDate();
         } catch (SQLException e) {
             System.out.print(e.getMessage());
