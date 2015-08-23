@@ -5,7 +5,7 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="903.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stratonov.controller.BDController">
   <children>
-    <Label fx:id="lbllogin" alignment="BASELINE_LEFT" disable="false" graphicTextGap="10.0" layoutX="768.0" layoutY="519.0" maxHeight="1.7976931348623157E308" prefHeight="28.0" prefWidth="129.0" textAlignment="RIGHT" textOverrun="WORD_ELLIPSIS" visible="true" wrapText="false">
+    <Label fx:id="lblLogin" alignment="BASELINE_LEFT" disable="false" graphicTextGap="10.0" layoutX="768.0" layoutY="519.0" maxHeight="1.7976931348623157E308" prefHeight="28.0" prefWidth="129.0" textAlignment="RIGHT" textOverrun="WORD_ELLIPSIS" visible="true" wrapText="false">
       <font>
         <Font name="System Italic" size="18.0" />
       </font>
