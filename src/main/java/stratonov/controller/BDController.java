@@ -1,19 +1,14 @@
 package stratonov.controller;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,107 +41,107 @@ public class BDController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        lbllogin.setText(LoginController.login);
-        try {
-//            statement = LoginController.connection.createStatement();
-//          select table_name from information_schema.tables WHERE table_schema = 'bread'
-            ResultSet result1 = statement.executeQuery("select table_name from information_schema.tables WHERE table_schema = 'bread'");
-            while (result1.next()) {
-                final MenuItem elem = new MenuItem(result1.getString(1));
-                elem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        tableView.getColumns().clear();
-                        columTableView.getItems().clear();
-                        itemAction = (MenuItem) event.getSource();
-//                            Select * From bread.tablel
-//                        if (LoginController.login.equals("worker") && itemAction.getText().equals("order")) {
-//                            outBottom.setVisible(true);
+//        try {
+////            statement = LoginController.connection.createStatement();
+////          select table_name from information_schema.tables WHERE table_schema = 'bread'
+//            ResultSet result1 = statement.executeQuery("select table_name from information_schema.tables WHERE table_schema = 'bread'");
+//            while (result1.next()) {
+//                final MenuItem elem = new MenuItem(result1.getString(1));
+//                elem.setOnAction(new EventHandler<ActionEvent>() {
+//                    @Override
+//                    public void handle(ActionEvent event) {
+//                        tableView.getColumns().clear();
+//                        columTableView.getItems().clear();
+//                        itemAction = (MenuItem) event.getSource();
+////                            Select * From bread.tablel
+////                        if (LoginController.login.equals("worker") && itemAction.getText().equals("order")) {
+////                            outBottom.setVisible(true);
+////                        }
+//                        data = FXCollections.observableArrayList();
+//                        try {
+//                            ResultSet rs = statement.executeQuery("Select * From bread." + itemAction.getText());
+//                            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+//                                final int j = i;
+//                                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+//                                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+//                                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+//                                        return new SimpleStringProperty(param.getValue().get(j).toString());
+//                                    }
+//                                });
+//                                col.setCellFactory(TextFieldTableCell.forTableColumn());
+//                                col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
+//                                    @Override
+//                                    public void handle(TableColumn.CellEditEvent event) {
+//                                        TableColumn tableColumn = event.getTableColumn();
+//                                        TablePosition tablePosition = event.getTablePosition();
+//                                        try {
+//                                            statement.executeUpdate("UPDATE bread." + itemAction.getText() + " SET " + tableColumn.getText() + " = " + event.getNewValue() + " WHERE " + idTableColumn1.getText() + " = " + data.get(tablePosition.getRow()).get(0) + ";");
+//                                        } catch (SQLException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                });
+//                                tableView.getColumns().addAll(col);
+//                            }
+//                            while (rs.next()) {
+//                                ObservableList<String> row = FXCollections.observableArrayList();
+//                                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+//                                    row.add(rs.getString(i));
+//                                }
+//                                data.add(row);
+//                            }
+//                            tableView.setItems(data);
+//                            MenuItem item = new MenuItem("all");
+//                            item.setOnAction(new EventHandler<ActionEvent>() {
+//                                @Override
+//                                public void handle(ActionEvent event) {
+//                                    tableView.setItems(data);
+//                                }
+//                            });
+//                            columTableView.getItems().add(item);
+//                            for (int i = 0; i < tableView.getColumns().size(); i++) {
+//                                MenuItem itme = new MenuItem(((TableColumn) tableView.getColumns().get(i)).getText());
+//                                itme.setOnAction(new EventHandler<ActionEvent>() {
+//                                    @Override
+//                                    public void handle(ActionEvent event) {
+//                                        try {
+//                                            if(!testSearch.getText().equals("")) {
+//                                                ResultSet rs1 = statement.executeQuery("Select * From bread." + itemAction.getText() + " where " + ((MenuItem) event.getSource()).getText() + " = '" + testSearch.getText() + "';");
+//                                                ObservableList<ObservableList> dataSearch = FXCollections.observableArrayList();
+//                                                while (rs1.next()) {
+//
+//                                                    ObservableList<String> row = FXCollections.observableArrayList();
+//                                                    for (int i = 1; i <= rs1.getMetaData().getColumnCount(); i++) {
+//                                                        row.add(rs1.getString(i));
+//                                                    }
+//
+//                                                    dataSearch.add(row);
+//                                                }
+//                                                tableView.setItems(dataSearch);
+//                                            }
+//                                        } catch (SQLException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                });
+//                                columTableView.getItems().add(itme);
+//                            }
+//                            editDate = tableView.getSelectionModel().getSelectedItems();
+//                            idTableColumn1 = ((TableColumn) tableView.getColumns().get(0));
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
 //                        }
-                        data = FXCollections.observableArrayList();
-                        try {
-                            ResultSet rs = statement.executeQuery("Select * From bread." + itemAction.getText());
-                            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                                final int j = i;
-                                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
-                                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                                        return new SimpleStringProperty(param.getValue().get(j).toString());
-                                    }
-                                });
-                                col.setCellFactory(TextFieldTableCell.forTableColumn());
-                                col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
-                                    @Override
-                                    public void handle(TableColumn.CellEditEvent event) {
-                                        TableColumn tableColumn = event.getTableColumn();
-                                        TablePosition tablePosition = event.getTablePosition();
-                                        try {
-                                            statement.executeUpdate("UPDATE bread." + itemAction.getText() + " SET " + tableColumn.getText() + " = " + event.getNewValue() + " WHERE " + idTableColumn1.getText() + " = " + data.get(tablePosition.getRow()).get(0) + ";");
-                                        } catch (SQLException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                tableView.getColumns().addAll(col);
-                            }
-                            while (rs.next()) {
-                                ObservableList<String> row = FXCollections.observableArrayList();
-                                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                                    row.add(rs.getString(i));
-                                }
-                                data.add(row);
-                            }
-                            tableView.setItems(data);
-                            MenuItem item = new MenuItem("all");
-                            item.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent event) {
-                                    tableView.setItems(data);
-                                }
-                            });
-                            columTableView.getItems().add(item);
-                            for (int i = 0; i < tableView.getColumns().size(); i++) {
-                                MenuItem itme = new MenuItem(((TableColumn) tableView.getColumns().get(i)).getText());
-                                itme.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent event) {
-                                        try {
-                                            if(!testSearch.getText().equals("")) {
-                                                ResultSet rs1 = statement.executeQuery("Select * From bread." + itemAction.getText() + " where " + ((MenuItem) event.getSource()).getText() + " = '" + testSearch.getText() + "';");
-                                                ObservableList<ObservableList> dataSearch = FXCollections.observableArrayList();
-                                                while (rs1.next()) {
-
-                                                    ObservableList<String> row = FXCollections.observableArrayList();
-                                                    for (int i = 1; i <= rs1.getMetaData().getColumnCount(); i++) {
-                                                        row.add(rs1.getString(i));
-                                                    }
-
-                                                    dataSearch.add(row);
-                                                }
-                                                tableView.setItems(dataSearch);
-                                            }
-                                        } catch (SQLException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                columTableView.getItems().add(itme);
-                            }
-                            editDate = tableView.getSelectionModel().getSelectedItems();
-                            idTableColumn1 = ((TableColumn) tableView.getColumns().get(0));
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-                smbTableBase.getItems().addAll(elem);
-                tableViewGet = tableView;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//
+//                    }
+//                });
+//                smbTableBase.getItems().addAll(elem);
+//                tableViewGet = tableView;
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void onActionDelete(ActionEvent actionEvent) {

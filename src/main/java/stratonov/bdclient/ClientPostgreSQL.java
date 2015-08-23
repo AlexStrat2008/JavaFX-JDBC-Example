@@ -25,10 +25,12 @@ public class ClientPostgreSQL implements JDBCClient {
         return instance == null ? instance = new ClientPostgreSQL() : instance;
     }
 
-    public void init(String url, String login, String password) throws SQLException {
+    @Override
+    public boolean init(String url, String login, String password) throws SQLException {
         Connection connection = DriverManager.getConnection(url, login, password);
         this.url = url;
         this.login = login;
         this.password = password;
+        return true;
     }
 }
