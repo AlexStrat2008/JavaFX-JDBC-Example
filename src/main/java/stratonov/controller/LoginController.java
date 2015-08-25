@@ -18,10 +18,7 @@ import java.io.IOException;
  * Created by strat on 17.03.15.
  */
 public class LoginController {
-    private static final String dbDriver = "postgresql";
-    private static final String dbUrl = "127.0.0.1:5432";
-    private static final String dbName = "Example";
-
+    private String url = "jdbc:postgresql://127.0.0.1:5432/Example";
     @FXML
     private TextField txtUsername;
     @FXML
@@ -36,15 +33,14 @@ public class LoginController {
                 throw new Exception("Укажите логин или пароль!");
             }
             JDBCClient jdbcClient = ClientPostgreSQL.getInstance();
-            if (jdbcClient.init(dbDriver, dbUrl, dbName, login, password)) {
+            if (jdbcClient.accessToDB(login, password)) {
                 Parent parent = FXMLLoader.load(getClass().getResource("/view/BD.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle("Table Frame");
                 stage.setScene(new Scene(parent));
                 stage.show();
                 System.out.println("Авторизация успешна прошла!");
-            }
-            else{
+            } else {
                 new Alert(Alert.AlertType.ERROR, "Подключение не произошло.\nПроверьте логин или пароль.").showAndWait();
             }
         } catch (NullPointerException e) {
@@ -52,8 +48,6 @@ public class LoginController {
             e.printStackTrace();
             System.exit(-1);
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();

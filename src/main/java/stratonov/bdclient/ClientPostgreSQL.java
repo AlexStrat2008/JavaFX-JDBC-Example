@@ -1,50 +1,107 @@
 package stratonov.bdclient;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by strat on 17.03.15.
  */
-public class ClientPostgreSQL extends JDBCClient {
+public class ClientPostgreSQL implements JDBCClient {
     private static ClientPostgreSQL instance;
-    private String url;
-    private static final String tableNamesSql = "select table_name from information_schema.tables WHERE table_schema = ?";
+    private Properties dbPropertis;
+    private String login = null;
+    private String password = null;
+    private String dbUrl = null;
+    private String dbSchema = null;
 
-    private ClientPostgreSQL() throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
-        System.out.println("Драйвер postgresql подключен");
-    }
-
-    public static ClientPostgreSQL getInstance() throws ClassNotFoundException {
+    public static ClientPostgreSQL getInstance() {
         return instance == null ? instance = new ClientPostgreSQL() : instance;
     }
 
-    @Override
-    public boolean init(String dbDriver, String dbUrl, String dbName, String login, String password){
-        this.url = super.getUrl(dbDriver,dbUrl,dbName);
-        Connection connection = null;
+    private ClientPostgreSQL() {
         try {
-            connection = DriverManager.getConnection(url, login, password);
-            connection.close();
-        } catch (SQLException e) {
-            return false;
+            dbPropertis = getDbProperties(getClass().getResource("/properties/config.properties").openStream());
+            if (dbPropertis != null) {
+                Class.forName(dbPropertis.getProperty("db.driver"));
+                dbUrl = dbPropertis.getProperty("db.url");
+                dbSchema = dbPropertis.getProperty("db.schema");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Не найден файл настроек");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        super.dbDriver = dbDriver;
-        super.dbUrl = dbUrl;
-        super.dbName = dbName;
-        super.login = login;
-        super.password = password;
-        return true;
+    }
+
+    private Properties getDbProperties(InputStream configFileInput) {
+        Properties property = new Properties();
+        try {
+            property.load(configFileInput);
+            return property;
+        } catch (FileNotFoundException e) {
+            System.out.println("Не найден файл настроек");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public List<String> tableNames() throws SQLException {
-        Connection connection = DriverManager.getConnection(url, super.login, super.password);
-        PreparedStatement statement = connection.prepareStatement(tableNamesSql);
+    public boolean accessToDB(String login, String password) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(dbUrl, login, password);
+            connection.close();
+            this.login = login;
+            this.password = password;
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    @Override
+    public List<String> getTableNames() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(dbUrl, login, password);
+            PreparedStatement statement = connection.prepareStatement(dbPropertis.getProperty("tableNamesSql"));
+            statement.setString(1, dbSchema);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> arrayList = new ArrayList<>();
+            while (resultSet.next()) {
+                arrayList.add(resultSet.getString(1));
+            }
+            return arrayList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<String> getTableColumns() {
         return null;
     }
 }

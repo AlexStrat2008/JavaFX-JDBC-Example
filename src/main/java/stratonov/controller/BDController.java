@@ -1,31 +1,24 @@
 package stratonov.controller;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import stratonov.bdclient.ClientPostgreSQL;
 import stratonov.bdclient.JDBCClient;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
  * Created by strat on 25.03.15.
  */
-public class BDController implements Initializable {
-
+public class BDController implements Initializable, EventHandler {
+    private String dbSchema = "bread";
     public SplitMenuButton smbTableBase;
 
     public TableView tableView;
@@ -34,8 +27,8 @@ public class BDController implements Initializable {
     public static MenuItem itemAction;
     private static ObservableList<ObservableList> data;
     public Button outBottom;
-    public Label lblLogin;
     public TextField testSearch;
+    public Label lblLogin;
     public SplitMenuButton columTableView;
     private ObservableList editDate;
     private TableColumn idTableColumn1;
@@ -43,12 +36,19 @@ public class BDController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            jdbcClient = ClientPostgreSQL.getInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        jdbcClient = ClientPostgreSQL.getInstance();
         lblLogin.setText(jdbcClient.getLogin());
+        List<String> nameTablesSet = jdbcClient.getTableNames();
+        if (nameTablesSet != null) {
+            MenuItem menuItem;
+            for (String iter : nameTablesSet) {
+                menuItem = new MenuItem(iter);
+                menuItem.setOnAction(this);
+                smbTableBase.getItems().addAll(menuItem);
+            }
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Таблицы не найдены!").showAndWait();
+        }
 //        try {
 ////            statement = LoginController.connection.createStatement();
 ////          select table_name from information_schema.tables WHERE table_schema = 'bread'
@@ -58,6 +58,7 @@ public class BDController implements Initializable {
 //                elem.setOnAction(new EventHandler<ActionEvent>() {
 //                    @Override
 //                    public void handle(ActionEvent event) {
+
 //                        tableView.getColumns().clear();
 //                        columTableView.getItems().clear();
 //                        itemAction = (MenuItem) event.getSource();
@@ -153,75 +154,85 @@ public class BDController implements Initializable {
     }
 
     public void onActionDelete(ActionEvent actionEvent) {
-        if (editDate != null) {
-            try {
-                statement.executeUpdate("DELETE FROM bread." + itemAction.getText() + " WHERE " + idTableColumn1.getText() + " = " + ((ObservableList) editDate.get(0)).get(0) + ";");
-                data.removeAll(editDate);
-                tableView.setItems(data);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            editDate = null;
-        } else
-            System.out.println("данные не введены!");
+//        if (editDate != null) {
+//            try {
+//                statement.executeUpdate("DELETE FROM bread." + itemAction.getText() + " WHERE " + idTableColumn1.getText() + " = " + ((ObservableList) editDate.get(0)).get(0) + ";");
+//                data.removeAll(editDate);
+//                tableView.setItems(data);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//            editDate = null;
+//        } else
+//            System.out.println("данные не введены!");
     }
 
     public void onActionAdd(ActionEvent actionEvent) {
-        Parent parent = null;
-        try {
-            parent = FXMLLoader.load(getClass().getResource("stratonov/view/DialogAdd.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.setTitle("DialogAdd");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Parent parent = null;
+//        try {
+//            parent = FXMLLoader.load(getClass().getResource("stratonov/view/DialogAdd.fxml"));
+//            Stage stage = new Stage();
+//            Scene scene = new Scene(parent);
+//            stage.setScene(scene);
+//            stage.setTitle("DialogAdd");
+//            stage.show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public static void updateDate() throws SQLException {
-        data.clear();
-        ResultSet rs = statement.executeQuery("Select * From bread." + itemAction.getText());
-        while (rs.next()) {
-            ObservableList<String> row = FXCollections.observableArrayList();
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                row.add(rs.getString(i));
-            }
-            data.add(row);
-        }
+    public static void updateDate() {
+//        data.clear();
+//        ResultSet rs = statement.executeQuery("Select * From bread." + itemAction.getText());
+//        while (rs.next()) {
+//            ObservableList<String> row = FXCollections.observableArrayList();
+//            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+//                row.add(rs.getString(i));
+//            }
+//            data.add(row);
+//        }
     }
 
     public void outBottomAction(ActionEvent actionEvent) {
-        File file = new File("/home/strat/out.doc");
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.append("Кассовый чек!\n");
-            ObservableList observableList = data.get(data.size() - 1);
-            System.out.println("select family_name, 'name', surname from bread.worker where id_worker = " + observableList.get(3) + ";");
-            System.out.println("select 'company' from bread.client where id_client = " + observableList.get(5) + ";");
-            ResultSet rs1 = statement.executeQuery("select family_name, name, surname from bread.worker where id_worker = " + observableList.get(3) + ";");
-            rs1.next();
-            writer.append("Время заказа: " + observableList.get(2) + "\n");
-            writer.append("Продавец:" + rs1.getString(1) + " " + rs1.getString(2) + " " + rs1.getString(3) + "\n");
-            rs1.close();
-            ResultSet rs2 = statement.executeQuery("select company from bread.client where id_client = " + observableList.get(5) + ";");
-            rs2.next();
-            writer.append("Покупатель: " + rs2.getString(1) + "\n");
-            rs2.close();
-            writer.append("Количество: " + observableList.get(1) + "\n");
-            ResultSet rs3 = statement.executeQuery("select price, name_goods from bread.goods where id_goods = " + observableList.get(4) + ";");
-            rs3.next();
-            writer.append("Продукт: " + rs3.getString(2) + "\n");
-            writer.append("Цена за единицу: " + rs3.getString(1) + "\n");
-            writer.append("Общая стоимость: " + (Integer.parseInt(rs3.getString(1)) * Integer.parseInt((String) observableList.get(1))) + "\n");
-            writer.flush();
-            System.out.println("Отчет записан в файл");
-        } catch (IOException e) {
-            System.out.println("Ошибка записи в файл");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        File file = new File("/home/strat/out.doc");
+//        try {
+//            FileWriter writer = new FileWriter(file);
+//            writer.append("Кассовый чек!\n");
+//            ObservableList observableList = data.get(data.size() - 1);
+//            System.out.println("select family_name, 'name', surname from bread.worker where id_worker = " + observableList.get(3) + ";");
+//            System.out.println("select 'company' from bread.client where id_client = " + observableList.get(5) + ";");
+//            ResultSet rs1 = statement.executeQuery("select family_name, name, surname from bread.worker where id_worker = " + observableList.get(3) + ";");
+//            rs1.next();
+//            writer.append("Время заказа: " + observableList.get(2) + "\n");
+//            writer.append("Продавец:" + rs1.getString(1) + " " + rs1.getString(2) + " " + rs1.getString(3) + "\n");
+//            rs1.close();
+//            ResultSet rs2 = statement.executeQuery("select company from bread.client where id_client = " + observableList.get(5) + ";");
+//            rs2.next();
+//            writer.append("Покупатель: " + rs2.getString(1) + "\n");
+//            rs2.close();
+//            writer.append("Количество: " + observableList.get(1) + "\n");
+//            ResultSet rs3 = statement.executeQuery("select price, name_goods from bread.goods where id_goods = " + observableList.get(4) + ";");
+//            rs3.next();
+//            writer.append("Продукт: " + rs3.getString(2) + "\n");
+//            writer.append("Цена за единицу: " + rs3.getString(1) + "\n");
+//            writer.append("Общая стоимость: " + (Integer.parseInt(rs3.getString(1)) * Integer.parseInt((String) observableList.get(1))) + "\n");
+//            writer.flush();
+//            System.out.println("Отчет записан в файл");
+//        } catch (IOException e) {
+//            System.out.println("Ошибка записи в файл");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
+    }
+
+    @Override
+    public void handle(Event event) {
+        cliningTable();
+    }
+
+    private void cliningTable() {
+        tableView.getColumns().clear();
+        tableView.getItems().clear();
     }
 }
