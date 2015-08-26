@@ -177,7 +177,7 @@ public class BDController implements Initializable {
         try {
             if (resultSet != null) {
                 ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-                fillingColumnsTAble(resultSetMetaData);
+                fillingColumnsTable(resultSetMetaData, selectedTable);
                 ObservableList<List<String>> data = FXCollections.observableArrayList();
                 while (resultSet.next()) {
                     List<String> row = new ArrayList<>();
@@ -193,19 +193,24 @@ public class BDController implements Initializable {
         }
     }
 
-    private void fillingColumnsTAble(ResultSetMetaData resultSetMetaData) throws SQLException {
-        for (int i = 1; i < resultSetMetaData.getColumnCount(); ++i) {
+    private void fillingColumnsTable(ResultSetMetaData resultSetMetaData, String selectedTable) throws SQLException {
+        for (int i = 0; i < resultSetMetaData.getColumnCount(); ++i) {
             TableColumn column = new TableColumn(resultSetMetaData.getColumnName(i + 1));
             final int finalI = i;
             column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<List<String>, String>, ObservableValue<String>>() {
                 @Override
                 public ObservableValue<String> call(TableColumn.CellDataFeatures<List<String>, String> data) {
-                    return new ReadOnlyStringWrapper(data.getValue().get(0));
+                    return new ReadOnlyStringWrapper(data.getValue().get(finalI));
                 }
             });
             column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
                 public void handle(TableColumn.CellEditEvent event) {
                     TablePosition tablePosition = event.getTablePosition();
+                    String columnSearch = ((List) tableView.getItems().get(tablePosition.getRow())).get(0).toString();
+                    String columnSearchName = ((TableColumn) tableView.getColumns().get(0)).getText();
+                    if(!jdbcClient.updateTable(selectedTable, event.getTableColumn().getText(), event.getNewValue().toString(), columnSearchName, columnSearch)){
+                        new Alert(Alert.AlertType.WARNING, "Данные не изменены.").showAndWait();
+                    }
                 }
             });
             column.setCellFactory(TextFieldTableCell.forTableColumn());

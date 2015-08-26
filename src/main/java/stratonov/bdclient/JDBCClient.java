@@ -8,8 +8,12 @@ import java.util.List;
  */
 public interface JDBCClient {
     boolean accessToDB(String login, String password);
+
     String getLogin();
+
     List<String> getTableNames();
-    List<String> getTableColumns(String selectedTable);
+
     ResultSet getTable(String selectedTable);
+
+    boolean updateTable(String selectedTable, String columnChangeName, String newRecord, String columnSearchName, String columnSearch);
 }

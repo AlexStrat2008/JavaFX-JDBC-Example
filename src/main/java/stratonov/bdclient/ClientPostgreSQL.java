@@ -103,7 +103,7 @@ public class ClientPostgreSQL implements JDBCClient {
     public ResultSet getTable(String selectedTable) {
         Connection connection = null;
         try {
-            StringBuilder query = new StringBuilder(dbPropertis.getProperty("getTableSql")).append(" ").append(dbSchema).append(".").append(selectedTable);
+            String query = String.format(dbPropertis.getProperty("getTableSql"), dbSchema, selectedTable);
             connection = DriverManager.getConnection(dbUrl, login, password);
             PreparedStatement statement = connection.prepareStatement(query.toString());
             return statement.executeQuery();
@@ -122,22 +122,17 @@ public class ClientPostgreSQL implements JDBCClient {
     }
 
     @Override
-    public List<String> getTableColumns(String selectedTable) {
+    public boolean updateTable(String selectedTable, String columnChangeName, String newRecord, String columnSearchName, String columnSearch) {
         Connection connection = null;
         try {
+            String query = String.format(dbPropertis.getProperty("updateTable"), dbSchema, selectedTable, columnChangeName, columnSearchName, columnSearch);
             connection = DriverManager.getConnection(dbUrl, login, password);
-            PreparedStatement statement = connection.prepareStatement(dbPropertis.getProperty("tableColumnsSql"));
-            statement.setString(1, dbSchema);
-            statement.setString(2, selectedTable);
-            ResultSet resultSet = statement.executeQuery();
-            ArrayList<String> arrayList = new ArrayList<>();
-            while (resultSet.next()) {
-                arrayList.add(resultSet.getString(1));
-            }
-            return arrayList;
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, newRecord);
+            return statement.executeUpdate() != -1 ? true : false;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return false;
         } finally {
             if (connection != null) {
                 try {
