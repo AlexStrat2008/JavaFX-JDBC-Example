@@ -100,8 +100,52 @@ public class ClientPostgreSQL implements JDBCClient {
         }
     }
 
+    public ResultSet getTable(String selectedTable) {
+        Connection connection = null;
+        try {
+            StringBuilder query = new StringBuilder(dbPropertis.getProperty("getTableSql")).append(" ").append(dbSchema).append(".").append(selectedTable);
+            connection = DriverManager.getConnection(dbUrl, login, password);
+            PreparedStatement statement = connection.prepareStatement(query.toString());
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     @Override
-    public List<String> getTableColumns() {
-        return null;
+    public List<String> getTableColumns(String selectedTable) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(dbUrl, login, password);
+            PreparedStatement statement = connection.prepareStatement(dbPropertis.getProperty("tableColumnsSql"));
+            statement.setString(1, dbSchema);
+            statement.setString(2, selectedTable);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<String> arrayList = new ArrayList<>();
+            while (resultSet.next()) {
+                arrayList.add(resultSet.getString(1));
+            }
+            return arrayList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

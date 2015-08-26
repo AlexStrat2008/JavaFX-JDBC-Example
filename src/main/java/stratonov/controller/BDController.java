@@ -1,23 +1,31 @@
 package stratonov.controller;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
 import stratonov.bdclient.ClientPostgreSQL;
 import stratonov.bdclient.JDBCClient;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 /**
  * Created by strat on 25.03.15.
  */
-public class BDController implements Initializable, EventHandler {
+public class BDController implements Initializable {
     private String dbSchema = "bread";
     public SplitMenuButton smbTableBase;
 
@@ -43,7 +51,13 @@ public class BDController implements Initializable, EventHandler {
             MenuItem menuItem;
             for (String iter : nameTablesSet) {
                 menuItem = new MenuItem(iter);
-                menuItem.setOnAction(this);
+                menuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        cliningTable();
+                        fillingTable(((MenuItem) event.getSource()).getText());
+                    }
+                });
                 smbTableBase.getItems().addAll(menuItem);
             }
         } else {
@@ -80,8 +94,8 @@ public class BDController implements Initializable, EventHandler {
 //                                col.setCellFactory(TextFieldTableCell.forTableColumn());
 //                                col.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
 //                                    @Override
-//                                    public void handle(TableColumn.CellEditEvent event) {
 //                                        TableColumn tableColumn = event.getTableColumn();
+//                                    public void handle(TableColumn.CellEditEvent event) {
 //                                        TablePosition tablePosition = event.getTablePosition();
 //                                        try {
 //                                            statement.executeUpdate("UPDATE bread." + itemAction.getText() + " SET " + tableColumn.getText() + " = " + event.getNewValue() + " WHERE " + idTableColumn1.getText() + " = " + data.get(tablePosition.getRow()).get(0) + ";");
@@ -151,6 +165,52 @@ public class BDController implements Initializable, EventHandler {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private void cliningTable() {
+        tableView.getColumns().clear();
+        tableView.getItems().clear();
+    }
+
+    private void fillingTable(String selectedTable) {
+        ResultSet resultSet = jdbcClient.getTable(selectedTable);
+        try {
+            if (resultSet != null) {
+                ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                fillingColumnsTAble(resultSetMetaData);
+                ObservableList<List<String>> data = FXCollections.observableArrayList();
+                while (resultSet.next()) {
+                    List<String> row = new ArrayList<>();
+                    for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                        row.add(resultSet.getString(i));
+                    }
+                    data.add(row);
+                }
+                tableView.setItems(data);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fillingColumnsTAble(ResultSetMetaData resultSetMetaData) throws SQLException {
+        for (int i = 1; i < resultSetMetaData.getColumnCount(); ++i) {
+            TableColumn column = new TableColumn(resultSetMetaData.getColumnName(i + 1));
+            final int finalI = i;
+            column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<List<String>, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<List<String>, String> data) {
+                    return new ReadOnlyStringWrapper(data.getValue().get(0));
+                }
+            });
+            column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
+                public void handle(TableColumn.CellEditEvent event) {
+                    TablePosition tablePosition = event.getTablePosition();
+                }
+            });
+            column.setCellFactory(TextFieldTableCell.forTableColumn());
+            tableView.getColumns().add(column);
+        }
     }
 
     public void onActionDelete(ActionEvent actionEvent) {
@@ -224,15 +284,5 @@ public class BDController implements Initializable, EventHandler {
 //            e.printStackTrace();
 //        }
 
-    }
-
-    @Override
-    public void handle(Event event) {
-        cliningTable();
-    }
-
-    private void cliningTable() {
-        tableView.getColumns().clear();
-        tableView.getItems().clear();
     }
 }

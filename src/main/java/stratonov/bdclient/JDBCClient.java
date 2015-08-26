@@ -1,5 +1,6 @@
 package stratonov.bdclient;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -9,6 +10,6 @@ public interface JDBCClient {
     boolean accessToDB(String login, String password);
     String getLogin();
     List<String> getTableNames();
-    List<String> getTableColumns();
-
+    List<String> getTableColumns(String selectedTable);
+    ResultSet getTable(String selectedTable);
 }
