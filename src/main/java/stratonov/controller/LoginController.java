@@ -3,9 +3,9 @@ package stratonov.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -18,6 +18,7 @@ import java.io.IOException;
  * Created by strat on 17.03.15.
  */
 public class LoginController {
+    public Button btnLogin;
     private String url = "jdbc:postgresql://127.0.0.1:5432/Example";
     @FXML
     private TextField txtUsername;
@@ -34,11 +35,14 @@ public class LoginController {
             }
             JDBCClient jdbcClient = ClientPostgreSQL.getInstance();
             if (jdbcClient.accessToDB(login, password)) {
-                Parent parent = FXMLLoader.load(getClass().getResource("/view/BD.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BD.fxml"));
+                BDController dialogAddController = new BDController();
+                loader.setController(dialogAddController);
                 Stage stage = new Stage();
-                stage.setTitle("Table Frame");
-                stage.setScene(new Scene(parent));
+                stage.setTitle("Таблица");
+                stage.setScene(new Scene(loader.load()));
                 stage.show();
+                ((Stage) btnLogin.getScene().getWindow()).close();
                 System.out.println("Авторизация успешна прошла!");
             } else {
                 new Alert(Alert.AlertType.ERROR, "Подключение не произошло.\nПроверьте логин или пароль.").showAndWait();

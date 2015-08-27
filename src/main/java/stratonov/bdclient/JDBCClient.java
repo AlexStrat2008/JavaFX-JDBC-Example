@@ -16,4 +16,8 @@ public interface JDBCClient {
     ResultSet getTable(String selectedTable);
 
     boolean updateTable(String selectedTable, String columnChangeName, String newRecord, String columnSearchName, String columnSearch);
+
+    boolean deleteRowTable(String selectedTable, String columnSearchName, String columnSearch);
+
+    boolean simpleQuery(String selectedTable, String sql);
 }
