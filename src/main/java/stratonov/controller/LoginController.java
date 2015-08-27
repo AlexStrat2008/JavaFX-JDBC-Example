@@ -1,7 +1,6 @@
 package stratonov.controller;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -15,17 +14,30 @@ import stratonov.bdclient.JDBCClient;
 import java.io.IOException;
 
 /**
- * Created by strat on 17.03.15.
+ * Контроллер окна авторизации
+ *
+ * @author a.stratonov
+ * @version 1.0
  */
 public class LoginController {
+    /**
+     * Свойство - кнопка авторизация
+     */
     public Button btnLogin;
-    private String url = "jdbc:postgresql://127.0.0.1:5432/Example";
-    @FXML
+    /**
+     * Свойство - поле для ввода логина
+     */
     private TextField txtUsername;
-    @FXML
+    /**
+     * Свойство - поле для ввода пароля
+     */
     private PasswordField txtPassword;
 
-    @FXML
+    /**
+     * Проврка данных пользователя, в случае успешной авторизации переходит на окно с таблицами.
+     *
+     * @param event
+     */
     private void btnLoginAction(ActionEvent event) {
         String login = txtUsername.getText();
         String password = txtPassword.getText();

@@ -9,20 +9,49 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by strat on 17.03.15.
+ * Класс-обертка над бд postgresql
+ *
+ * @author a.stratonov
+ * @version 1.0
  */
 public class ClientPostgreSQL implements JDBCClient {
+    /**
+     * Свойство - Объект класса
+     */
     private static ClientPostgreSQL instance;
+    /**
+     * Свойство - Объект файла настроек
+     */
     private Properties dbProperties;
-    private String login = null;;
+    /**
+     * Свойство - логин
+     */
+    private String login = null;
+    /**
+     * Свойство - пароль
+     */
     private String password = null;
+    /**
+     * Свойство - url бд
+     */
     private String dbUrl = null;
+    /**
+     * Свойство - схема
+     */
     private String dbSchema = null;
 
+    /**
+     * Вовзращает объект класса
+     *
+     * @return - объект класса
+     */
     public static ClientPostgreSQL getInstance() {
         return instance == null ? instance = new ClientPostgreSQL() : instance;
     }
 
+    /**
+     * Инцилизация необходимых полей из файла настроек
+     */
     private ClientPostgreSQL() {
         try {
             dbProperties = getDbProperties(getClass().getResource("/properties/config.properties").openStream());
@@ -41,6 +70,12 @@ public class ClientPostgreSQL implements JDBCClient {
         }
     }
 
+    /**
+     * Возвращает объект файла найстроек
+     *
+     * @param configFileInput - поток файла настроек
+     * @return - объект Properties
+     */
     private Properties getDbProperties(InputStream configFileInput) {
         Properties property = new Properties();
         try {
@@ -55,6 +90,13 @@ public class ClientPostgreSQL implements JDBCClient {
         return null;
     }
 
+    /**
+     * Доступ к базе дыннах по логину и паролю. Url и драйвер должен быть реализован в классе имплементирующий интерфейс.
+     *
+     * @param login    - логин
+     * @param password - пароль
+     * @return - true, если доступ разрешён
+     */
     @Override
     public boolean accessToDB(String login, String password) {
         Connection connection = null;
@@ -69,10 +111,19 @@ public class ClientPostgreSQL implements JDBCClient {
         return true;
     }
 
+    /**
+     * Функция для получения имени пользоватля
+     *
+     * @return - возвращает логин
+     */
+    @Override
     public String getLogin() {
         return login;
     }
 
+    /**
+     * @see JDBCClient#getTableNames()
+     */
     @Override
     public List<String> getTableNames() {
         Connection connection = null;
@@ -100,6 +151,10 @@ public class ClientPostgreSQL implements JDBCClient {
         }
     }
 
+    /**
+     * @see JDBCClient#getTable(String)
+     */
+    @Override
     public ResultSet getTable(String selectedTable) {
         Connection connection = null;
         try {
@@ -121,6 +176,9 @@ public class ClientPostgreSQL implements JDBCClient {
         }
     }
 
+    /**
+     * @see JDBCClient#updateTable(String, String, String, String, String)
+     */
     @Override
     public boolean updateTable(String selectedTable, String columnChangeName, String newRecord, String columnSearchName, String columnSearch) {
         Connection connection = null;
@@ -144,6 +202,9 @@ public class ClientPostgreSQL implements JDBCClient {
         }
     }
 
+    /**
+     * @see JDBCClient#deleteRowTable(String, String, String)
+     */
     @Override
     public boolean deleteRowTable(String selectedTable, String columnSearchName, String columnSearch) {
         Connection connection = null;
@@ -166,6 +227,9 @@ public class ClientPostgreSQL implements JDBCClient {
         }
     }
 
+    /**
+     * @see JDBCClient#simpleQuery(String, String)
+     */
     @Override
     public boolean simpleQuery(String selectedTable, String sql) {
         Connection connection = null;

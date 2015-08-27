@@ -23,3 +23,6 @@ jar {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.6'
 }
+task myJavadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}

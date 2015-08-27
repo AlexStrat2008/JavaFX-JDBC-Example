@@ -6,6 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Точка входа в программу
+ *
+ * @author a.stratonov
+ * @version 1.0
+ */
 public class Main extends Application {
 
     @Override

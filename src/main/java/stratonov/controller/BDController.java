@@ -26,29 +26,64 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * Created by strat on 25.03.15.
+ * Контроллер окна с таблицами
+ *
+ * @author a.stratonov
+ * @version 1.0
  */
 public class BDController implements Initializable {
+    /**
+     * Свойство - меню с таблицами
+     */
     public SplitMenuButton smbTableBase;
+    /**
+     * Свойство - текущая таблица
+     */
     public TableView tableView;
+    /**
+     * Свойство - текущий пользователь
+     */
     public Label lblLogin;
+    /**
+     * Свойство - объект класса для работы с бд
+     */
     private JDBCClient jdbcClient;
+    /**
+     * Свойство - имя текущей таблицы
+     */
     private String selectedTable = "";
+    /**
+     * Свойство - Список колонок таблицы
+     */
     private List<String> columnNames;
 
+    /**
+     * Конструктор контроллера
+     */
     BDController() {
     }
 
+    /**
+     * Конструктор контроллера
+     *
+     * @param selectedTable - имя таблицы, которая должна быть загружена
+     */
     BDController(String selectedTable) {
         this.selectedTable = selectedTable;
     }
 
+    /**
+     * Обновление таблицы
+     */
     private void updateTable() {
         cliningTable();
         fillingTable();
         fillingColumnsTable();
     }
 
+    /**
+     * @see Initializable#initialize(URL, ResourceBundle)
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         jdbcClient = ClientPostgreSQL.getInstance();
@@ -75,11 +110,17 @@ public class BDController implements Initializable {
         }
     }
 
+    /**
+     * Очистка таблицы
+     */
     private void cliningTable() {
         tableView.getColumns().clear();
         tableView.getItems().clear();
     }
 
+    /**
+     * Заполнение таблицы данными
+     */
     private void fillingTable() {
         ResultSet resultSet = jdbcClient.getTable(selectedTable);
         try {
@@ -103,6 +144,9 @@ public class BDController implements Initializable {
         }
     }
 
+    /**
+     * Заполнение колонок(имена) таблицы
+     */
     private void fillingColumnsTable() {
         for (int i = 0; i < columnNames.size(); ++i) {
             TableColumn column = new TableColumn(columnNames.get(i));
@@ -129,6 +173,11 @@ public class BDController implements Initializable {
         }
     }
 
+    /**
+     * Удаление строки в таблице
+     *
+     * @param actionEvent - экшен
+     */
     public void onActionDelete(ActionEvent actionEvent) {
         int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
         if (selectedIndex != -1) {
@@ -139,6 +188,11 @@ public class BDController implements Initializable {
         }
     }
 
+    /**
+     * Добавление данных в таблицу. Переход на форму добавления нового элемента в таблицу.
+     *
+     * @param actionEvent - экшен
+     */
     public void onActionAdd(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DialogAdd.fxml"));

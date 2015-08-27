@@ -19,19 +19,45 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * Created by strat on 24.03.15.
+ * Контроллер окна добавления элемента в таблицу
+ *
+ * @author a.stratonov
+ * @version 1.0
  */
 public class DialogAddController implements Initializable {
+    /**
+     * Свойство - Основная панель
+     */
     public AnchorPane anchorPaneDialogAdd;
+    /**
+     * Свойство - Кнопка добавления данных и перехода в основное окно (окно с таблицой)
+     */
     public Button idBottomAdd;
+    /**
+     * Свойство - Список имен колонок таблицы
+     */
     private List<String> columnNames;
+    /**
+     * Свойство - имя выбранной таблицы
+     */
     private String selectedTable;
 
+    /**
+     * Конструктор контроллера.
+     *
+     * @param columnNames   - список имен колонк таблицы
+     * @param selectedTable - имя таблицы, в которую добавляются данных
+     */
     public DialogAddController(List<String> columnNames, String selectedTable) {
         this.columnNames = columnNames;
         this.selectedTable = selectedTable;
     }
 
+    /**
+     * Кнопка добавления данных в таблицу
+     *
+     * @param actionEvent - экшен
+     */
     public void onActionBottomAdd(ActionEvent actionEvent) {
         ObservableList<Node> list = anchorPaneDialogAdd.getChildren();
         String sqlAdd = " INSERT INTO %s.%s (";
@@ -57,6 +83,9 @@ public class DialogAddController implements Initializable {
         showTable();
     }
 
+    /**
+     * @see Initializable#initialize(URL, ResourceBundle)
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (columnNames != null) {
@@ -76,6 +105,9 @@ public class DialogAddController implements Initializable {
         }
     }
 
+    /**
+     * Переход в основное окно (Окно с таблицой)
+     */
     private void showTable() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/BD.fxml"));
