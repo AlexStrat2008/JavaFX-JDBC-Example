@@ -186,7 +186,7 @@ public class ClientPostgreSQL implements JDBCClient {
             String query = String.format(dbProperties.getProperty("updateTable"), dbSchema, selectedTable, columnChangeName, columnSearchName, columnSearch);
             connection = DriverManager.getConnection(dbUrl, login, password);
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, newRecord);
+            statement.setObject(1, convertStringToInteger(newRecord));
             return statement.executeUpdate() != -1 ? true : false;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -249,6 +249,19 @@ public class ClientPostgreSQL implements JDBCClient {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Метод возвращает число, если строка строка состоит из цифр
+     * @param str - конвертируемая строка
+     * @return String или Integer
+     */
+    private Object convertStringToInteger(String str){
+        try {
+            return new Integer(str);
+        }catch (NumberFormatException e){
+            return str;
         }
     }
 }
